@@ -8,11 +8,13 @@ public class Person {
 
     private String name="Lucy";
 
-    @Autowired(required = false)
+//    @Autowired
     private Vehicle vehicle;
 
-    public Person() {
+    @Autowired
+    public Person(Vehicle vehicle) {
         System.out.println("Person been created by spring");
+        this.vehicle=vehicle;
     }
 
     public String getName() {
@@ -27,6 +29,7 @@ public class Person {
         return vehicle;
     }
 
+//    @Autowired
     public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
