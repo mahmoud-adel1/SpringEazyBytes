@@ -6,7 +6,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class MichelinTyres implements Tyres {
     @Override
-    public void rotate() {
-        System.out.println("Michelin tyres rotate");
+    public String rotate() {
+        return "Vehicle moving with the help of Michelin tyres";
+    }
+
+    @Override
+    public String stop() {
+        return "Vehicle stop with the help of Michelin tyres";
     }
 }

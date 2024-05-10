@@ -1,5 +1,7 @@
 package com.eazybytes.interfaces;
 
+import com.eazybytes.model.Song;
+
 public interface Speakers {
-    void makeSound();
+    String makeSound(Song song);
 }

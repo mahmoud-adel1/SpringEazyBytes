@@ -1,20 +1,26 @@
 package com.eazybytes.main;
 
-import com.eazybytes.beans.Person;
+
 import com.eazybytes.config.ProjectConfig;
+import com.eazybytes.model.Song;
 import com.eazybytes.services.VehicleServices;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class Main {
     public static void main(String[] args) {
         var context = new AnnotationConfigApplicationContext(ProjectConfig.class);
-        VehicleServices vehicleServices1 = context.getBean(VehicleServices.class);
-        VehicleServices vehicleServices2 = context.getBean(VehicleServices.class);
-        System.out.println("Hashcode of the object vehicleServices1: " + vehicleServices1.hashCode());
-        System.out.println("Hashcode of the object vehicleServices2: " + vehicleServices2.hashCode());
-        if(vehicleServices1.hashCode() == vehicleServices2.hashCode()) {
-            System.out.println("VehicleServices bean is a prototype scoped bean");
-        }
+        VehicleServices vehicleServices = context.getBean(VehicleServices.class);
+        System.out.println(vehicleServices.getClass());
+        Song song = new Song();
+        song.setTitle("Blank Space");
+        song.setSingerName("Taylor Swift");
+        boolean vehicleStarted = true;
+        String moveVehicleStatus = vehicleServices.moveVehicle(vehicleStarted);
+        String playMusicStatus = vehicleServices.playMusic(vehicleStarted,song);
+        String applyBrakeStatus = vehicleServices.applyBrake(vehicleStarted);
 
+
+
+        
     }
 }
