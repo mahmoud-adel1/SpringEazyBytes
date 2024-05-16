@@ -13,12 +13,14 @@ public class ProjectSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((requests) -> {
             requests
-                    .requestMatchers("/home").permitAll()
-                    .requestMatchers("/holidays/").permitAll()
+                    .requestMatchers("/","/home").permitAll()
+                    .requestMatchers("/holidays/**").permitAll()
                     .requestMatchers("/contact").permitAll()
                     .requestMatchers("/saveMsg").permitAll()
                     .requestMatchers("/courses").permitAll()
-                    .requestMatchers("/about").permitAll();
+                    .requestMatchers("/about").permitAll()
+                    .requestMatchers("/assets/**").authenticated();
+
         })
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
