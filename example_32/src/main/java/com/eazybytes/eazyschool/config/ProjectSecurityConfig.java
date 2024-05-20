@@ -8,11 +8,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
-import java.util.function.Function;
+import org.springframework.util.PathMatcher;
 
 @Configuration
 public class ProjectSecurityConfig {
@@ -39,7 +37,7 @@ public class ProjectSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, PathMatcher mvcPathMatcher) throws Exception {
         http
                 .csrf(config -> config
                         .ignoringRequestMatchers("/saveMsg")
@@ -54,6 +52,8 @@ public class ProjectSecurityConfig {
                         .requestMatchers("/about").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/logout").permitAll()
+                        .requestMatchers("/displayMessages").hasRole("ADMIN")
+                        .requestMatchers("/closeMsg/**").hasRole("ADMIN")
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers("/assets/**").permitAll())
                 .formLogin(config -> config
@@ -64,7 +64,8 @@ public class ProjectSecurityConfig {
                 .logout(config -> config
                         .logoutSuccessUrl("/login?logout=true")
                         .invalidateHttpSession(true))
-                .httpBasic(Customizer.withDefaults());
+                .httpBasic(Customizer.withDefaults())
+                .headers(config->config.disable());
 
         return http.build();
     }
