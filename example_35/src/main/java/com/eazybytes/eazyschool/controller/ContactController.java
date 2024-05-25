@@ -19,8 +19,8 @@ import java.util.List;
 @Slf4j
 @Controller
 public class ContactController {
-    private ContactService contactService;
 
+    private ContactService contactService;
 
     @Autowired
     public ContactController(ContactService contactService) {
