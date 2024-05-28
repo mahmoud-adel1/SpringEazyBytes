@@ -27,3 +27,44 @@ CREATE TABLE IF NOT EXISTS `holidays` (
     `updated_at` TIMESTAMP DEFAULt NULL,
     `updated_by` varchar(20) DEFAULT NULL
     );
+
+CREATE TABLE IF NOT EXISTS `roles` (
+    `role_id` INT NOT NULL AUTO_INCREMENT,
+    `role_name` VARCHAR(50) NOT NULL ,
+    `created_at` TIMESTAMP NOT NULL ,
+    `created_by` VARCHAR(50) NOT NULL ,
+    `updated_at` TIMESTAMP DEFAULT NULL ,
+    `updated_by` VARCHAR(50) DEFAULT NULL,
+    PRIMARY KEY (`role_id`)
+);
+
+CREATE TABLE IF NOT EXISTS `address` (
+    `address_id` INT NOT NULL AUTO_INCREMENT ,
+    `address1` VARCHAR(50) NOT NULL ,
+    `address2` VARCHAR(50) DEFAULT NULL ,
+    `city` VARCHAR(50) NOT NULL ,
+    `state` VARCHAR(50) NOT NULL ,
+    `zip_code` INT NOT NULL ,
+    `created_at` TIMESTAMP NOT NULL ,
+    `created_by` VARCHAR(50) NOT NULL ,
+    `updated_at` TIMESTAMP DEFAULT NULL ,
+    `updated_by` VARCHAR(50) DEFAULT NULL ,
+    PRIMARY KEY (`address_id`)
+);
+
+CREATE TABLE IF NOT EXISTS `person` (
+    `Person_id` INT NOT NULL AUTO_INCREMENT ,
+    `name` VARCHAR(100) NOT NULL ,
+    `mobile_number` VARCHAR(20) NOT NULL ,
+    `email` VARCHAR(50) NOT NULL ,
+    `password` VARCHAR(200) NOT NULL ,
+    `role_id` INT NOT NULL ,
+    `address_id` INT DEFAULT NULL ,
+    `created_at` TIMESTAMP NOT NULL ,
+    `created_by` VARCHAR(50) NOT NULL ,
+    `updated_at` TIMESTAMP DEFAULT NULL ,
+    `updated_by` VARCHAR(50) DEFAULT NULL ,
+    PRIMARY KEY (`Person_id`) ,
+    FOREIGN KEY (`role_id`) REFERENCES role (`role_id`) ,
+    FOREIGN KEY (`address_id`) REFERENCES `address` (`address_id`)
+);

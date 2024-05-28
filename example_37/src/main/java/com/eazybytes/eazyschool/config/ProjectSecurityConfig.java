@@ -40,7 +40,8 @@ public class ProjectSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, PathMatcher mvcPathMatcher) throws Exception {
         http
                 .csrf(config -> config
-                        .ignoringRequestMatchers("/saveMsg"))
+                        .ignoringRequestMatchers("/saveMsg")
+                        .ignoringRequestMatchers("/public/**"))
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/", "/home").permitAll()
                         .requestMatchers("/dashboard").authenticated()
@@ -51,6 +52,7 @@ public class ProjectSecurityConfig {
                         .requestMatchers("/about").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/logout").permitAll()
+                        .requestMatchers("/public/**").permitAll()
                         .requestMatchers("/displayMessages").hasRole("ADMIN")
                         .requestMatchers("/closeMsg/**").hasRole("ADMIN")
                         .requestMatchers("/assets/**").permitAll())
