@@ -1,5 +1,6 @@
 package com.eazybytes.eazyschool.controller;
 
+import com.eazybytes.eazyschool.model.Course;
 import com.eazybytes.eazyschool.model.EazyClass;
 import com.eazybytes.eazyschool.model.Person;
 import com.eazybytes.eazyschool.repository.EazyClassRepository;
@@ -104,5 +105,64 @@ public class AdminController {
         adminService.updateClass(eazyClass);
 //        session.setAttribute("eazyClass",eazyClass);
         return "redirect:/admin/displayStudents?classId="+eazyClass.getClassId();
+    }
+
+    @GetMapping("/displayCourses")
+    public String displayCourses(Model model) {
+        List<Course> courses = adminService.getAllCourses();
+        model.addAttribute("course",new Course());
+        model.addAttribute("courses",courses);
+        return "courses_secure";
+    }
+
+    @PostMapping("/addNewCourse")
+    public String addNewCourse(@Valid @ModelAttribute(name = "course") Course course,Errors errors, Model model) {
+        if(errors.hasErrors()) {
+            model.addAttribute("courses",adminService.getAllCourses());
+            return "courses_secure";
+        }
+        adminService.createCourse(course);
+        return "redirect:/admin/displayCourses";
+    }
+
+    @GetMapping("/viewStudents")
+    public String viewStudents(@RequestParam(name = "courseId") int courseId, Model model,
+                               HttpSession session,
+                               @RequestParam(name = "error", required = false) String error) {
+        String errorMessage = null;
+        Optional<Course> course = adminService.getCourseById(courseId);
+        model.addAttribute("course",course.get());
+        model.addAttribute("person",new Person());
+        session.setAttribute("course",course.get());
+        if(error != null) {
+            errorMessage = "Email Address Not Found";
+            model.addAttribute("errorMessage",errorMessage);
+        }
+        return "course_students";
+    }
+
+    @PostMapping("/addStudentToCourse")
+    public String addStudentToCourse(@ModelAttribute(name = "person") Person person,HttpSession session, Model model) {
+        Course course = (Course) session.getAttribute("course");
+        Person student = adminService.findPersonByEmail(person.getEmail());
+        if(student == null || !(student.getPersonId()>0)) {
+            return "redirect:/admin/viewStudents?courseId="+course.getCourseId()+"&error=true";
+        }
+        course.getPersons().add(person);
+        student.getCourses().add(course);
+        adminService.updatePerson(student);
+        return "redirect:/admin/viewStudents?courseId="+course.getCourseId();
+    }
+
+    @GetMapping("/deleteStudentFromCourse")
+    public String deleteStudentFromCourse(@RequestParam(name = "personId") int personId, HttpSession session) {
+        Optional<Person> person = adminService.findPersonById(personId);
+        Course course = (Course) session.getAttribute("course");
+        if(person.isPresent()) {
+            course.getPersons().remove(person);
+            person.get().getCourses().remove(course);
+            adminService.updatePerson(person.get());
+        }
+            return "redirect:/admin/viewStudents?courseId="+course.getCourseId();
     }
 }
